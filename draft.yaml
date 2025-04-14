@@ -1,0 +1,12 @@
+models:
+  Client:
+    nom: string:100
+    prenom: string:100
+    date_naissance: date
+    adresse: string:255
+    code_postal: string:10
+    ville: string:100
+
+controllers:
+  Client:
+    resource: web
