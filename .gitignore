@@ -22,3 +22,4 @@ yarn-error.log
 /.vscode
 /.zed
 sonar-project.properties
+.scannerwork
