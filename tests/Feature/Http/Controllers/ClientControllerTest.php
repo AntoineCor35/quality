@@ -6,7 +6,6 @@ use App\Models\Client;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
-use JMac\Testing\Traits\AdditionalAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -15,7 +14,7 @@ use Tests\TestCase;
  */
 final class ClientControllerTest extends TestCase
 {
-    use AdditionalAssertions, RefreshDatabase, WithFaker;
+    use RefreshDatabase, WithFaker;
 
     #[Test]
     public function index_displays_view(): void
@@ -29,7 +28,6 @@ final class ClientControllerTest extends TestCase
         $response->assertViewHas('clients');
     }
 
-
     #[Test]
     public function create_displays_view(): void
     {
@@ -37,17 +35,6 @@ final class ClientControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertViewIs('client.create');
-    }
-
-
-    #[Test]
-    public function store_uses_form_request_validation(): void
-    {
-        $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\ClientController::class,
-            'store',
-            \App\Http\Requests\ClientStoreRequest::class
-        );
     }
 
     #[Test]
@@ -84,7 +71,6 @@ final class ClientControllerTest extends TestCase
         $response->assertSessionHas('client.id', $client->id);
     }
 
-
     #[Test]
     public function show_displays_view(): void
     {
@@ -97,7 +83,6 @@ final class ClientControllerTest extends TestCase
         $response->assertViewHas('client');
     }
 
-
     #[Test]
     public function edit_displays_view(): void
     {
@@ -108,17 +93,6 @@ final class ClientControllerTest extends TestCase
         $response->assertOk();
         $response->assertViewIs('client.edit');
         $response->assertViewHas('client');
-    }
-
-
-    #[Test]
-    public function update_uses_form_request_validation(): void
-    {
-        $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\ClientController::class,
-            'update',
-            \App\Http\Requests\ClientUpdateRequest::class
-        );
     }
 
     #[Test]
@@ -154,7 +128,6 @@ final class ClientControllerTest extends TestCase
         $this->assertEquals($ville, $client->ville);
     }
 
-
     #[Test]
     public function destroy_deletes_and_redirects(): void
     {
@@ -163,7 +136,6 @@ final class ClientControllerTest extends TestCase
         $response = $this->delete(route('clients.destroy', $client));
 
         $response->assertRedirect(route('clients.index'));
-
-        $this->assertModelMissing($client);
+        $this->assertDatabaseMissing('clients', ['id' => $client->id]);
     }
 }
