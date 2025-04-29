@@ -17,7 +17,6 @@ class ClientController extends Controller
     {
         // 1. Duplication de code (bloc dupliqué)
         $clients = Client::all();
-        $clients2 = Client::all(); // duplication inutile
 
         return view('client.index', [
             'clients' => $clients,

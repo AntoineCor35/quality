@@ -2,6 +2,40 @@
 
 Ce projet a pour objectif de mettre en place un environnement d'intégration continue avec Jenkins et SonarQube, puis d'ajouter volontairement quelques bugs pour observer comment les outils détectent les problèmes.
 
+# Déroulé de la découverte des outils de test
+
+1. Initialisation du projet et création de la base Laravel.
+    
+    Nous avons d'abord créé un projet Laravel vierge, et y avons ajouté une base de code back + database + front simple pour un CRUD de clients.
+        
+2. Première utilisation de SonarQube 
+
+    Test et premier aperçu de SonarQube. Navigation dans les interfaces et découverte des types de bugs détectés.
+
+3. Installation des images Docker (SonarQube et Jenkins)
+
+    Par le biais d'un DockerFile, docker-compose et JenkinsFile, nous avons simplifié le lancement de ces différents outils au sein de l'application.
+
+4. Configuration des outils
+
+    Jenkins nécessite pas mal de temps à la configuration. 
+    - Ajout de tous les plugins
+    - Liaison avec SonarQube
+        - Utilisation de Credentials pour le token
+        - Gérer les URLs
+    - Liaison avec le repository Github
+        - [A FAIRE] Utilisation de Github webhook
+    - Création et configuration du JenkinsFile
+    - [A FAIRE] Ajout des vérifications OWASP 
+
+5. Ajout volontaire de bugs
+
+    Les outils étant mis en place et configurés, il faut maintenant insérer volontairement des bugs et constater la détection de SonarQube.
+
+6. Reporting
+
+# Installation et utilisation des outils
+
 ## Prérequis
 
 - Docker et Docker Compose installés
@@ -45,9 +79,44 @@ Ce projet contient volontairement plusieurs défauts de code pour illustrer les 
    - *Description :* Bloc de code identique répété inutilement.
    - *Emplacement :* `ClientController.php`, méthode `index()`
 
+   Source de l'erreur :
+
+      ```php
+      $clients = Client::all();
+      $clients2 = Client::all(); // duplication inutile
+      ```
+   Détection :
+
+    ![Bug 1 détecté par SonarQube](docs/report_bug_1.png)
+
+    Correction de l'erreur :
+
+      ```php
+      $clients = Client::all();
+      ```
+
 2. **If/then mal formé**
    - *Description :* Utilisation d'un if sans accolades.
    - *Emplacement :* `ClientController.php`, méthode `show()`
+
+   Source de l'erreur :
+
+    ```php
+    if ($client) // if sans accolades
+        return view('client.show', ['client' => $client]); 
+    ```
+
+    Détection :
+
+    ![Bug 2 détecté par SonarQube](docs/report_bug_2.png)
+
+    Correction de l'erreur :
+
+    ```php
+    if ($clients) {
+        return view('client.show', ['client' => $client]);
+    }
+    ```
 
 3. **Mauvais nommage de variable/fonction/classe**
    - *Description :* Nom de fonction non conforme (`SaveClient` au lieu de `saveClient`).
