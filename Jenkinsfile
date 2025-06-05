@@ -15,7 +15,7 @@ pipeline {
         }        
         stage('OWASP Dependency Check') {
             tools {
-                'OWASP Dependency-Check Vulnerabilities' 'latest'
+                'dependency-check' 'OWASP Dependency-Check Vulnerabilities'
             }
             steps {
                 sh '''
