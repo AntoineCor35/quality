@@ -21,7 +21,7 @@ pipeline {
                 sh '''
                     # Créer le répertoire reports s'il n'existe pas
                     mkdir -p reports
-                      # Exécuter OWASP Dependency Check avec l'outil Jenkins
+                    # Exécuter OWASP Dependency Check avec l'outil Jenkins
                     dependency-check.sh --project "quality-app" \
                                        --scan . \
                                        --format HTML \
@@ -30,16 +30,29 @@ pipeline {
                                        --enableRetired
                 '''
                 
-                // Publier les rapports HTML
-                publishHTML([
-                    allowMissing: false,
-                    alwaysLinkToLastBuild: true,
-                    keepAll: true,
-                    reportDir: 'reports',
-                    reportFiles: 'dependency-check-report.html',
-                    reportName: 'OWASP Dependency Check Report'
-                ])
+                // Archiver les rapports générés (méthode simple)
+                archiveArtifacts artifacts: 'reports/*', 
+                                fingerprint: true,
+                                allowEmptyArchive: true
+                
+                // Afficher un lien vers les rapports
+                echo "OWASP Dependency Check reports generated:"
+                echo "- HTML Report: reports/dependency-check-report.html"
+                echo "- JSON Report: reports/dependency-check-report.json"
             }
+        }
+    }
+    
+    post {
+        always {
+            echo 'Cleaning up workspace...'
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+            echo 'Check the archived artifacts for OWASP Dependency Check reports.'
+        }
+        failure {
+            echo 'Pipeline failed. Check the logs for more details.'
         }
     }
 }
