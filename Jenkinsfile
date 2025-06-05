@@ -13,12 +13,10 @@ pipeline {
 
                 }
             }
-        }
-
+        }        
         stage('OWASP Dependency Check') {
             steps {
                 dependencyCheck additionalArguments: '--format HTML --out reports', 
-                                scanpath: '.', 
                                 odcInstallation: 'Default'
             }
         }
