@@ -9,7 +9,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh 'sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dsonar.projectKey=quality-app -Dsonar.sources=../'
+                    sh 'sonar-scanner -sonar.login=$SONAR_TOKEN -sonar.projectKey=quality-app -sonar.sources=../'
 
                 }
             }
