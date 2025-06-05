@@ -12,7 +12,8 @@ pipeline {
                     sh 'sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dsonar.projectKey=quality-app -Dsonar.sources=../'
                 }
             }
-        }        stage('OWASP Dependency Check') {
+        }        
+        stage('OWASP Dependency Check') {
             tools {
                 'OWASP Dependency-Check Vulnerabilities' 'latest'
             }
